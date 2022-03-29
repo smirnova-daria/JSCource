@@ -9,36 +9,54 @@ const servicePrice1 = parseInt(prompt('Сколько это будет стои
 const service2 = prompt('Какой дополнительный тип услуги нужен?');
 const servicePrice2 = parseInt(prompt('Сколько это будет стоить?'));
 
-const rollback = 5;
-const fullPrice = screenPrice + servicePrice1 + servicePrice2;
+let rollback = 0;
 
-const servicePercentPrice = fullPrice - Math.floor(fullPrice * rollback / 100);
-console.log(servicePercentPrice);
+let allServicePrices;
+let fullPrice;
+let servicePercentPrice;
 
-console.log(typeof title);
-console.log(typeof fullPrice);
-console.log(typeof adaptive);
+const showTypeOf = function (variable) {
+	console.log(variable, typeof variable);	
+};
 
-console.log(screens.length);
+const getRollbackMessage = function (price) {
+	if (price >= 30000) {
+		rollback = 10;
+		return 'Даем скидку в 10%';
+	} else if (price >= 15000 && price < 30000) {
+		rollback = 5;
+		return 'Даем скидку в 5%';
+	} else if (price < 15000 && price >= 0) {
+		return 'Скидка не предусмотрена';
+	} else {
+		return 'Что-то пошло не так';
+	}	
+};
 
-console.log('Стоимость верстки экранов ' + screenPrice + ' рублей');
-console.log('Стоимость разработки сайта ' + fullPrice + ' рублей');
+const getAllServicePrices = function (price1, price2) {
+	return price1 + price2;
+};
+
+function getFullPrice(screenPrice, allServicePrices) {
+	return screenPrice + allServicePrices;
+}
+
+function getTitle(title) {
+	return title.trim()[0].toUpperCase() + title.trim().substring(1).toLowerCase();
+}
+
+function getServicePercentPrices(fullPrice, rollback) {
+	return fullPrice - Math.floor(fullPrice * rollback / 100);
+}
+
+allServicePrices = getAllServicePrices(servicePrice1, servicePrice2);
+fullPrice = getFullPrice(screenPrice, allServicePrices);
+servicePercentPrice = getServicePercentPrices(fullPrice, rollback);
+
+showTypeOf(getTitle(title));
+showTypeOf(fullPrice);
+showTypeOf(adaptive);
 
 console.log(screens.toLowerCase().split(', '));
-
-console.log('Процент отката посреднику за работу ' + (fullPrice * rollback / 100));
-
-switch (true) {
-	case fullPrice >= 30000:
-		console.log('Даем скидку в 10%');
-		break;
-	case fullPrice >= 15000 && fullPrice < 30000:
-		console.log('Даем скидку в 5%');
-		break;
-	case fullPrice < 15000 && fullPrice >= 0:
-		console.log('Скидка не предусмотрена');
-		break;
-	case fullPrice < 0:
-		console.log('Что-то пошло не так');
-		break;		
-}
+console.log(getRollbackMessage(fullPrice));
+console.log(getServicePercentPrices(fullPrice, rollback));
