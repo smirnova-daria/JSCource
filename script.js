@@ -42,7 +42,13 @@ function getFullPrice(screenPrice, allServicePrices) {
 }
 
 function getTitle(title) {
-	return title.trim()[0].toUpperCase() + title.trim().substring(1).toLowerCase();
+	let newTitle;
+	if (!title) {
+		newTitle = "Название проекта не указано";
+	} else {
+		newTitle = title.trim()[0].toUpperCase() + title.trim().substring(1).toLowerCase();
+	}	
+	return newTitle;
 }
 
 function getServicePercentPrices(fullPrice, rollback) {
