@@ -1,5 +1,20 @@
 'use strict';
 
+const title = document.getElementsByTagName('h1')[0];
+const handlerButtons = document.getElementsByClassName('handler_btn');
+const plusBtn = document.querySelector('.screen-btn');
+const otherItemsWithPercent = document.querySelectorAll('.other-items.percent');
+const otherItemsWithNumber = document.querySelectorAll('.other-items.number');
+const inputRange = document.querySelector('.rollback input[type="range"]');
+const rangeValue = document.querySelector('.rollback span.range-value');
+const totalInput0 = document.getElementsByClassName('total-input')[0];
+const totalInput1 = document.getElementsByClassName('total-input')[1];
+const totalInput2 = document.getElementsByClassName('total-input')[2];
+const totalInput3 = document.getElementsByClassName('total-input')[3];
+const totalInput4 = document.getElementsByClassName('total-input')[4];
+
+let screens = document.querySelectorAll('.screen');
+
 const appData = {
 	title: '',
 	screens: [],
@@ -118,4 +133,4 @@ const appData = {
 	}
 };
 
-appData.start();
+//appData.start();
