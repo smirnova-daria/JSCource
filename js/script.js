@@ -20,6 +20,8 @@ const fullTotalCount = document.getElementsByClassName('total-input')[3];
 const totalCountRollback = document.getElementsByClassName('total-input')[4];
 
 let screens = document.querySelectorAll('.screen');
+let selects = document.querySelectorAll('select[name=views-select]:not(#cms-select)');
+let inputsScreensQuantity = document.querySelectorAll('.main-controls__input > input:not(#cms-other-input)');
 
 const appData = {
 	title: '',
@@ -36,9 +38,13 @@ const appData = {
 	servicesNumber: {},
 	init: function () {
 		appData.addTitle();
+		appData.checkSelects();
 
+		startBtn.addEventListener('click', appData.checkSelects);
 		startBtn.addEventListener('click', appData.start);
+
 		plusBtn.addEventListener('click', appData.addScreenBlock);
+		plusBtn.addEventListener('click', appData.checkSelects);
 		inputRange.addEventListener('input', appData.addRollback);
 	},
 	addTitle: function () {
@@ -49,7 +55,7 @@ const appData = {
 		appData.addServices();
 		appData.addPrices();
 
-		//appData.logger();
+		appData.logger();
 
 		appData.showResult();
 	},
@@ -59,6 +65,37 @@ const appData = {
 		totalCountOther.value = appData.servicePricesPercent + appData.servicePricesNumber;
 		fullTotalCount.value = appData.fullPrice;
 		totalCountRollback.value = appData.servicePercentPrice;
+	},
+	checkSelects: function () {
+		selects = document.querySelectorAll('select[name=views-select]:not(#cms-select)');
+		inputsScreensQuantity = document.querySelectorAll('.main-controls__input > input:not(#cms-other-input)');
+		startBtn.disabled = false;
+
+		selects.forEach(select => {
+			select.addEventListener('change', appData.checkSelects);
+			select.addEventListener('change', () => {
+				startBtn.addEventListener('click', appData.start);
+			});
+		});
+
+		inputsScreensQuantity.forEach(input => {
+			input.addEventListener('change', appData.checkSelects);
+			input.addEventListener('change', () => {
+				startBtn.addEventListener('click', appData.start);
+			});
+		});
+
+		selects.forEach(select => {
+			const selectName = select.options[select.selectedIndex].textContent;
+			if (selectName === 'Тип экранов') {
+				startBtn.disabled = true;
+			}
+		});
+		inputsScreensQuantity.forEach(input => {
+			if (input.value === "" || input.value === 0 || input.value === null) {
+				startBtn.disabled = true;
+			}
+		});
 	},
 	addScreens: function () {
 		appData.screens = [];
@@ -76,12 +113,14 @@ const appData = {
 				name: selectName,
 				price: +select.value * +input.value
 			});
-
 		});
 	},
 	addScreenBlock: function () {
 		const cloneScreen = screens[0].cloneNode(true);
 		screens[screens.length - 1].after(cloneScreen);
+
+		selects = document.querySelectorAll('select[name=views-select]:not(#cms-select)');
+		inputsScreensQuantity = document.querySelectorAll('.main-controls__input > input:not(#cms-other-input)');
 	},
 	addServices: function () {
 		otherItemsWithPercent.forEach(item => {
@@ -124,6 +163,7 @@ const appData = {
 	addRollback: function (event) {
 		inputRangeValue.textContent = event.target.value;
 		appData.rollback = +event.target.value;
+		totalCountRollback.value = appData.fullPrice - Math.floor(appData.fullPrice * +event.target.value / 100);
 	},
 	logger: function () {
 		// console.log(appData.services);
