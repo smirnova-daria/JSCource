@@ -38,13 +38,10 @@ const appData = {
 	servicesNumber: {},
 	init: function () {
 		appData.addTitle();
-		appData.checkSelects();
 
-		startBtn.addEventListener('click', appData.checkSelects);
-		startBtn.addEventListener('click', appData.start);
+		startBtn.addEventListener('click', appData.isCheckedSelects);
 
 		plusBtn.addEventListener('click', appData.addScreenBlock);
-		plusBtn.addEventListener('click', appData.checkSelects);
 		inputRange.addEventListener('input', appData.addRollback);
 	},
 	addTitle: function () {
@@ -66,36 +63,29 @@ const appData = {
 		fullTotalCount.value = appData.fullPrice;
 		totalCountRollback.value = appData.servicePercentPrice;
 	},
+	isCheckedSelects: function () {
+		let isChecked = appData.checkSelects();
+		if (isChecked) {
+			appData.start();
+		}
+	},
 	checkSelects: function () {
 		selects = document.querySelectorAll('select[name=views-select]:not(#cms-select)');
 		inputsScreensQuantity = document.querySelectorAll('.main-controls__input > input:not(#cms-other-input)');
-		startBtn.disabled = false;
-
-		selects.forEach(select => {
-			select.addEventListener('change', appData.checkSelects);
-			select.addEventListener('change', () => {
-				startBtn.addEventListener('click', appData.start);
-			});
-		});
-
-		inputsScreensQuantity.forEach(input => {
-			input.addEventListener('change', appData.checkSelects);
-			input.addEventListener('change', () => {
-				startBtn.addEventListener('click', appData.start);
-			});
-		});
+		let isChecked = true;
 
 		selects.forEach(select => {
 			const selectName = select.options[select.selectedIndex].textContent;
 			if (selectName === 'Тип экранов') {
-				startBtn.disabled = true;
+				isChecked = false;
 			}
 		});
 		inputsScreensQuantity.forEach(input => {
 			if (input.value === "" || input.value === 0 || input.value === null) {
-				startBtn.disabled = true;
+				isChecked = false;
 			}
 		});
+		return isChecked;
 	},
 	addScreens: function () {
 		appData.screens = [];
