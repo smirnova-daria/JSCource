@@ -21,6 +21,11 @@ const totalCountRollback = document.getElementsByClassName('total-input')[4];
 
 const checkboxes = document.querySelectorAll('input[type=checkbox]')
 
+const openCMS = document.getElementById('cms-open');
+const hiddenCMS = document.querySelector('.hidden-cms-variants');
+const cmsSelect = document.getElementById('cms-select');
+const hiddenInput = document.querySelector('.hidden-cms-variants > .main-controls__input');
+
 let screens = document.querySelectorAll('.screen');
 let selects = document.querySelectorAll('select[name=views-select]:not(#cms-select)');
 let inputsScreensQuantity = document.querySelectorAll('.main-controls__input > input:not(#cms-other-input)');
@@ -45,6 +50,7 @@ const appData = {
 		plusBtn.addEventListener('click', appData.addScreenBlock.bind(appData));
 		inputRange.addEventListener('input', appData.addRollback.bind(appData));
 		resetBtn.addEventListener('click', appData.reset.bind(appData));
+		openCMS.addEventListener('change', appData.openCMS.bind(appData));
 	},
 	addTitle: function () {
 		this.title = title.textContent;
@@ -104,9 +110,25 @@ const appData = {
 		inputsScreensQuantity[0].disabled = false;
 		plusBtn.disabled = false;
 
+		hiddenCMS.style.display = 'none';
+		hiddenInput.style.display = 'none';
+		cmsSelect.disabled = false;
+		hiddenInput.querySelector('input').disabled = false;
+
 		checkboxes.forEach(box => {
 			box.checked = false;
 		});
+	},
+	openCMS: function () {
+		hiddenCMS.style.display = 'flex';
+		cmsSelect.addEventListener('change', () => {
+			if (cmsSelect.value === 'other') {
+				hiddenInput.style.display = 'flex';
+			} else {
+				hiddenInput.style.display = 'none';
+			}
+		});
+
 	},
 	showResult: function () {
 		total.value = this.screenPrice;
@@ -129,6 +151,8 @@ const appData = {
 			input.disabled = true;
 		});
 		plusBtn.disabled = true;
+		cmsSelect.disabled = true;
+		hiddenInput.querySelector('input').disabled = true;
 	},
 	checkSelects: function () {
 		selects = document.querySelectorAll('select[name=views-select]:not(#cms-select)');
@@ -191,6 +215,14 @@ const appData = {
 				this.servicesNumber[label.textContent] = +input.value;
 			}
 		});
+
+		if (openCMS.checked) {
+			if (cmsSelect.value === 'other') {
+				this.servicesPercent['CMS-other'] = +hiddenInput.querySelector('input').value;
+			} else {
+				this.servicesPercent['CMS-Wordpress'] = +cmsSelect.value;
+			}
+		}
 	},
 	addPrices: function () {
 		this.screenPrice = this.screens.reduce((accumulator, current) => (accumulator + current.price), 0);
