@@ -46,11 +46,11 @@ const appData = {
 	init: function () {
 		this.addTitle();
 
-		startBtn.addEventListener('click', appData.isCheckedSelects.bind(appData));
-		plusBtn.addEventListener('click', appData.addScreenBlock.bind(appData));
-		inputRange.addEventListener('input', appData.addRollback.bind(appData));
-		resetBtn.addEventListener('click', appData.reset.bind(appData));
-		openCMS.addEventListener('change', appData.openCMS.bind(appData));
+		startBtn.addEventListener('click', this.isCheckedSelects.bind(appData));
+		plusBtn.addEventListener('click', this.addScreenBlock.bind(appData));
+		inputRange.addEventListener('input', this.addRollback.bind(appData));
+		resetBtn.addEventListener('click', this.reset.bind(appData));
+		openCMS.addEventListener('change', this.openCMS.bind(appData));
 	},
 	addTitle: function () {
 		this.title = title.textContent;
